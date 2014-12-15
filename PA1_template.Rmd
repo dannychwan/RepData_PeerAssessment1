@@ -19,15 +19,15 @@ activity_data$date<-as.Date(activity_data$date)
 ## What is mean total number of steps taken per day?
 ```{r meanofsteps, echo=TRUE}
 #aggregate the steps by date
-mean_steps<-aggregate(steps~date, data=activity_data, sum)
+sum_steps<-aggregate(steps~date, data=activity_data, sum)
 
-hist(mean_steps$steps, main="Total Number of Steps taken per Day")
+hist(sum_steps$steps, main="Total Number of Steps taken per Day")
 
 #calculate the mean of the total steps
-mean(mean_steps$steps)
+mean(sum_steps$steps)
 
 #calculate the media of the total steps
-median(mean_steps$steps)
+median(sum_steps$steps)
 ```
 
 ## What is the average daily activity pattern?
@@ -42,7 +42,36 @@ mean_interval[which.max(mean_interval$steps),]$interval
 
 
 ## Imputing missing values
+```{r}
+#total number of rows that have NA Values
+nrow(activity_data)-sum(complete.cases(activity_data))
+```
 
+Strategy for filling in missing data shall be using the mean for that interval
 
+```{r}
+new_data<-activity_data
+for(i in 1:nrow(new_data)){
+  if(is.na(new_data[i,]$steps)){
+    tempo_row<-subset(mean_interval, mean_interval$interval==new_data[i,]$interval)
+    new_data[i,]$steps<-tempo_row$steps
+    }
+}
+
+#aggregate the steps by date
+new_sum_steps<-aggregate(steps~date, data=new_data, sum)
+
+hist(new_sum_steps$steps, main="Total Number of Steps taken per Day")
+
+#calculate the mean of the total steps
+mean(new_sum_steps$steps)
+
+#calculate the media of the total steps
+median(new_sum_steps$steps)
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+new_data$day<-ifelse(weekdays(as.Date(new_data$date))=="Saturday","weekend",ifelse(weekdays(as.Date(new_data$date))=="Sunday","weekend","weekday"))
+```
+
