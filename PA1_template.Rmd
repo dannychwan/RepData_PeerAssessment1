@@ -73,5 +73,9 @@ median(new_sum_steps$steps)
 ## Are there differences in activity patterns between weekdays and weekends?
 ```{r}
 new_data$day<-ifelse(weekdays(as.Date(new_data$date))=="Saturday","weekend",ifelse(weekdays(as.Date(new_data$date))=="Sunday","weekend","weekday"))
+
+weekdaysubset<-subset(new_data, new_data$day=="weekday")
+weekendsubset<-subset(new_data, new_data$day=="weekend"))
+
 ```
 
