@@ -7,15 +7,38 @@ output:
 
 
 ## Loading and preprocessing the data
+```{r Loading_Data, echo=TRUE}
+#unzip and read csv
+unzip("activity.zip")
+activity_data<-read.csv("activity.csv")
 
-
+#Format date column into a date
+activity_data$date<-as.Date(activity_data$date)
+```
 
 ## What is mean total number of steps taken per day?
+```{r meanofsteps, echo=TRUE}
+#aggregate the steps by date
+mean_steps<-aggregate(steps~date, data=activity_data, sum)
 
+hist(mean_steps$steps, main="Total Number of Steps taken per Day")
 
+#calculate the mean of the total steps
+mean(mean_steps$steps)
+
+#calculate the media of the total steps
+median(mean_steps$steps)
+```
 
 ## What is the average daily activity pattern?
+```{r}
+#aggregate the steps by interval mean
+mean_interval<-aggregate(steps~interval, data=activity_data, mean)
+plot(mean_interval$steps~mean_interval$interval,type="l", main="Average Number of Steps taken")
 
+print("interval with max value:")
+mean_interval[which.max(mean_interval$steps),]$interval
+```
 
 
 ## Imputing missing values
